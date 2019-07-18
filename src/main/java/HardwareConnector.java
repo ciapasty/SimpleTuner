@@ -86,13 +86,11 @@ public class HardwareConnector {
         captureThread.start();
     }
 
-    public void stopAudioCapture() throws InterruptedException {
+    public void stopAudioCapture() {
         if (captureThread == null || stopCapture) {
             return;
         }
-
-        stopCapture = true;
-        captureThread.join();
+        captureThread.interrupt();
     }
 
     public float[] getAudioBuffer() throws IOException {
@@ -127,8 +125,6 @@ public class HardwareConnector {
         return out;
     }
 
-    //
-
     private int getBufferSizeInBytes() {
         return bufferSize * audioFormat.getSampleSizeInBits() / 8;
     }
@@ -153,9 +149,8 @@ public class HardwareConnector {
         byte[] buffer = new byte[getBufferSizeInBytes()];
 
         public void run() {
-            stopCapture = false;
             try {
-                while (!stopCapture) {
+                while (!isInterrupted()) {
                     int cnt = targetDataLine.read(
                             buffer, 0, buffer.length);
                     if (cnt > 0) {

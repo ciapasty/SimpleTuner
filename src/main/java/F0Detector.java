@@ -12,8 +12,7 @@ public class F0Detector {
         this.pitchDetector = detector;
     }
 
-    public float getF0(float[] buffer) {
-        PitchDetectionResult result = pitchDetector.getPitch(buffer);
-        return result.getPitch();
+    public PitchDetectionResult getF0(float[] buffer) {
+        return pitchDetector.getPitch(buffer);
     }
 }

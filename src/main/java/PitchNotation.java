@@ -1,19 +1,22 @@
+import be.tarsos.dsp.pitch.PitchDetectionResult;
+
 public class PitchNotation {
     private static String[] NOTE_NAMES = {
             "C", "C#/Db", "D", "D#/Eb", "E", "F",
             "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"
     };
 
-    private float frequency;
+    private double frequency;
     private int octave;
     private String note;
     private int cents;
 
-    public static PitchNotation getNotation(float frequency) {
+    public static PitchNotation getNotation(PitchDetectionResult result) {
+        double frequency = result.getPitch();
         int refOctave = 4;
         int refA440index = 9;
 
-        double halfStepsDiff = 12.0 * Math.log((double)frequency / 440.0) / Math.log(2);
+        double halfStepsDiff = 12.0 * Math.log(frequency / 440.0) / Math.log(2);
         double noteIndexRaw = (refA440index + halfStepsDiff) % 12.0;
         int noteIndex = (int)Math.round(noteIndexRaw);
         noteIndex = noteIndex == 12 ? 0 : noteIndex;
@@ -26,7 +29,7 @@ public class PitchNotation {
                 .build();
     }
 
-    public float getFrequency() {
+    public double getFrequency() {
         return frequency;
     }
 
@@ -48,12 +51,12 @@ public class PitchNotation {
     }
 
     private static final class Builder {
-        private float frequency;
+        private double frequency;
         private int octave;
         private String note;
         private int cents;
 
-        public Builder frequency(float frequency) {
+        public Builder frequency(double frequency) {
             this.frequency = frequency;
             return this;
         }
