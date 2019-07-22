@@ -1,3 +1,5 @@
+package models;
+
 import be.tarsos.dsp.pitch.PitchDetectionResult;
 
 public class PitchNotation {
